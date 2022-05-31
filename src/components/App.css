@@ -1,0 +1,219 @@
+/* .App {
+  text-align: center;
+  background-color: #282c34;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 0.2rem;
+  background: #313639;
+  color: #f9f9f9;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 0.7rem;
+} */
+
+/* .App {
+  width: 100%;
+}
+
+h1 {
+  font-weight: 900;
+  margin: 0.4em 0 0.6em;
+} */
+
+/* placeholders */
+.placeholder {
+  background: #ecf0f1;
+}
+
+.Timeline {
+  height: 300px;
+  min-width: 500px;
+  width: calc(100% + 1em);
+  margin-bottom: 2em;
+}
+
+.Histogram {
+  height: 500px;
+  flex: 1;
+  min-width: 500px;
+  overflow: hidden;
+}
+
+.ScatterPlot {
+  height: 500px;
+  width: 500px;
+  margin-right: 2em;
+}
+
+.App__charts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: -0.5em;
+}
+
+.Timeline,
+.ScatterPlot,
+.Histogram {
+  background: white;
+  padding: 0.6em 1em;
+  margin: 0.5em;
+}
+
+.Chart {
+  overflow: visible;
+}
+
+.Chart text {
+  fill: #95a5a6;
+}
+
+.Line {
+  transition: all 0.3s ease-out;
+}
+
+.Line--type-line {
+  fill: none;
+  stroke: #9980fa;
+  stroke-width: 3px;
+  stroke-linecap: round;
+}
+
+.Line--type-area {
+  fill: rgba(152, 128, 250, 0.185);
+  stroke-width: 0;
+}
+
+.Axis__line {
+  stroke: #bdc3c7;
+}
+
+.Axis__label {
+  text-anchor: middle;
+  font-size: 0.9em;
+  letter-spacing: 0.01em;
+}
+
+.Axis__tick {
+  font-size: 0.8em;
+  transition: all 0.3s ease-out;
+}
+
+.AxisHorizontal .Axis__tick {
+  text-anchor: middle;
+}
+
+.AxisVertical .Axis__tick {
+  dominant-baseline: middle;
+  text-anchor: end;
+}
+
+.Circles__circle {
+  /* fill: #9980fa; */
+  transition: all 0.3s ease-out;
+}
+
+.Bars__rect {
+  fill: #9980fa;
+  transition: all 0.3s ease-out;
+}
+
+.domain,
+.tick line {
+  stroke: #dadada;
+}
+
+
+
+
+
+.results-table, .results-table > tbody {
+  display: flex;
+  flex-flow: column;
+}
+
+.results-table {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.results-table > tbody > tr > td:first-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  max-width: 100px;
+  min-width: 100px;
+  padding-right: 10px;
+}
+
+.results-table > tbody > tr > td:first-child > p {
+  color: #6c757d;
+  margin-bottom: 0px;
+  text-align: right;
+}
+
+.results-table > tbody > tr > td {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.results-table > tbody > tr:first-child { border-top: 0; }
+
+.results-table > tbody > tr {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.results-table > tbody > tr > td:last-child {
+  flex-grow: 1;
+  min-width: 0;
+  padding-left: 10px;
+  padding-top: 2px;
+}
+
+.results-table > tbody > tr {
+  display: flex;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+
+
