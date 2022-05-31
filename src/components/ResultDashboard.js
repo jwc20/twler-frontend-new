@@ -34,31 +34,50 @@ const ResultDashboard = () => {
     return () => undefined;
   }, []);
 
-  const countMen = Object.keys(menData).reduce(function (r, k) {
-    var country = menData[k].nation;
-    r[country] = (r[country] || 0) + 1;
-    return r;
-  }, Object.create(null));
+  // const countMen = Object.keys(menData).reduce(function (r, k) {
+  //   var country = menData[k].nation;
+  //   r[country] = (r[country] || 0) + 1;
+  //   return r;
+  // }, Object.create(null));
   // console.log(countMen);
 
-  const objMenNation = {};
-  let arr1 = Object.keys(countMen);
-  let arr2 = Object.values(countMen);
+  var res = menData.reduce(function (x, cur) {
+    let item = cur.nation;
+    if (!x[item]) x[item] = 0;
+    x[item] = x[item] + 1;
+    return x;
+  }, {});
 
-  for (let i = 0; i < countMen.length; i++ ) {
-    objMenNation.name = arr1[i];
-    console.log(arr1[i])
-    objMenNation['value'] = arr2[i];
-
-    // objMenNation['name'] = Object.keys(countMen);
-    // objMenNation['value'] = Object.values(countMen)
+  var menNations = [];
+  for (const key in res) {
+    const count = res[key];
+    const data = key;
+    menNations.push({
+      name: data,
+      value: count,
+    });
   }
-
-  console.log(objMenNation)
-
+  // console.log(menNations);
 
 
-  
+  var res = womenData.reduce(function (x, cur) {
+    let item = cur.nation;
+    if (!x[item]) x[item] = 0;
+    x[item] = x[item] + 1;
+    return x;
+  }, {});
+
+  var womenNations = [];
+  for (const key in res) {
+    const count = res[key];
+    const data = key;
+    womenNations.push({
+      name: data,
+      value: count,
+    });
+  }
+  console.log(womenNations)
+
 
   return (
     <div>
@@ -148,20 +167,20 @@ const ResultDashboard = () => {
                 <div className="App__charts">
                   <div className="h-56 grid grid-cols-2 gap-4 text-center	">
                     <div>
-                      <h3>Men's Categories</h3>
+                      <h3>Participanting Nation Men</h3>
                       <DonutChart
-                        data={[countMen]}
-                        // xAccessor={categoryAccessor}
-                        // label="Category"
+                        data={menNations}
+                        xAccessor={categoryAccessor}
+                        label="Category"
                       />
                     </div>
                     <div>
-                      <h3>Women's Categories</h3>
-                      {/* <Histogram
-                        data={womenData}
+                      <h3>Participanting Nation Women</h3>
+                      <DonutChart
+                        data={womenNations}
                         xAccessor={categoryAccessor}
                         label="Category"
-                      /> */}
+                      />
                     </div>
 
                     <div>
