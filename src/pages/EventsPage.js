@@ -1,10 +1,15 @@
 import { Suspense, useMemo } from "react";
 import EventTable, { SelectColumnFilter } from "../components/EventTable";
 import { useState, useEffect } from "react";
+import { Route } from "react-router-dom";
+import ResultPage from "../pages/ResultPage";
+import { useNavigate } from "react-router-dom";
+
 
 const url = "http://127.0.0.1:3000";
 
 function EventsPage() {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   // Temporary solution
   const placeholderYears = [
@@ -60,11 +65,104 @@ function EventsPage() {
     getInitialYear();
   }, []);
 
+  const handleRowClick = () => (row) => {
+    console.log(row);
+  };
+
+  // const onRowClick = (e) => {
+  //   // console.log(e.target.innerText);
+  //   const event_name = e.target.innerText.replace(/\s/g, "-").toLowerCase();
+  //   console.log(event_name);
+  //   // return (
+  //   //   <Route path="results" element={<ResultPage event={event_name} />} />
+  //   // )
+
+  //   navigate("results", {
+  //     state: {
+  //       event: event_name,
+  //     },
+  //   });
+  // };
+
+  // const handleRowClick = (e) => {
+  //   console.log(e);
+  // };
+
+  //   const handleRowClick = (e) => {
+  //     console.log(row)
+  //     return {
+  //         onClick: e => {
+  //             console.log('A Td Element was clicked!')
+  //             console.log('it produced this event:', e)
+  //             console.log('It was in this row:', row)
+  //         }
+  //     }
+  // }
+
+  const handleButtonClick = (row) => {
+    // console.log("clicked");
+    // console.log(row.cell.row.original.name, row.cell.row.original.date.split(', ')[1]);
+
+          // console.log(e.target.innerText);
+      const event_name = row.cell.row.original.name.replace(/\s/g, "-").toLowerCase();
+      const event_year = row.cell.row.original.date.split(', ')[1]
+      console.log(event_name, event_year);
+      // return (
+      //   <Route path="results" element={<ResultPage event={event_name} />} />
+      // )
+
+      navigate("results", {
+        state: {
+          event: event_name,
+          year: event_year,
+        },
+      });
+
+
+
+
+
+  };
+
+  const ActionComponent = ({ row, onClick }) => {
+    const clickHandler = () => onClick(row);
+
+    return <button onClick={() => handleButtonClick(row)}>Action</button>;
+  };
+
   const columns = useMemo(
     () => [
+      // {
+      //   Header: "",
+      //   accessor:'button',
+      //   Cell: ({ row }) => (
+      //     <button onClick={(e) => this.handleRowClick(row)}>Button</button>
+      //   ),
+
+      // },
+
+      {
+        Header: "",
+        accessor: "button",
+        // name: "",
+        // button: true,
+        // sortable: false,
+        Cell: (row) => <ActionComponent row={row}>Action</ActionComponent>,
+      },
+
       {
         Header: "Name",
         accessor: "name",
+        // Cell: (row) =>
+        // {
+        //   return (
+        //     // console.log(row)
+        //     console.log(row.cell.row.values.name, row.cell.row.values.date.split(', ')[1])
+        //     // <div>
+        //     //   {row}
+        //     // </div>
+        //   );
+        // },
       },
       {
         Header: "Location",

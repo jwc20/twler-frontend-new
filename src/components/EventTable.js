@@ -14,6 +14,9 @@ import {
   ChevronDoubleRightIcon,
 } from "@heroicons/react/solid";
 import { Button, PageButton } from "./PaginationButton";
+import { Route } from "react-router-dom";
+import ResultPage from "../pages/ResultPage";
+import { useNavigate } from "react-router-dom";
 
 const url = "http://127.0.0.1:3000";
 
@@ -79,7 +82,11 @@ function GlobalFilter({
   );
 }
 
+// /************************************************************************************ */
+
 function EventTable({ columns, events }) {
+  const navigate = useNavigate();
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -109,6 +116,52 @@ function EventTable({ columns, events }) {
     usePagination
   );
 
+  // {
+  //   return (
+
+  //     // console.log(row)
+  //     console.log(row.cell.row.values.name, row.cell.row.values.date.split(', ')[1])
+
+  //     // <div>
+  //     //   {row}
+  //     // </div>
+  //   );
+  // },
+
+  // const onRowClick = (e) => {
+  //   // console.log(e.target.innerText);
+  //   const event_name = e.target.innerText.replace(/\s/g, "-").toLowerCase();
+  //   console.log(event_name);
+  //   // return (
+  //   //   <Route path="results" element={<ResultPage event={event_name} />} />
+  //   // )
+
+  //   navigate("results", {
+  //     state: {
+  //       event: event_name,
+  //     },
+  //   });
+  // };
+
+  // const handleClick = (row) => {
+  //   console.log(row);
+  //   const onClick = e => {
+  //     console.log(e.target)
+  //   }
+  // };
+
+  //   const onRowClick = (row) => {
+  //     console.log(row)
+  //     return {
+  //         onClick: e => {
+  //             console.log('A Td Element was clicked!')
+  //             console.log('it produced this event:', e)
+  //             console.log('It was in this row:', row)
+  //         }
+  //     }
+  // }
+
+  // /************************************************************************************ */
   return (
     <div>
       <div className="flex gap-x-2">
@@ -167,13 +220,18 @@ function EventTable({ columns, events }) {
                   {page.map((row, i) => {
                     prepareRow(row);
                     return (
+                      // /************************************************************************************ */
                       <tr
                         className="odd:bg-white even:bg-slate-100 hover:bg-slate-200 active:bg-slate-300 focus:outline-none focus:ring"
                         {...row.getRowProps()}
+                        // {...row.getRowProps({
+                        //   onClick: e => onRowClicked(row, e)})}
+                        // onClick={handleClick({ ...row })}
+                        // onClick={onRowClick}
+                        // onClick={onRowClick}
                       >
                         {row.cells.map((cell) => {
                           return (
-                            // TODO ONCLICK
                             <td
                               className="px-6 py-4 whitespace-nowrap"
                               {...cell.getCellProps()}
@@ -183,6 +241,7 @@ function EventTable({ columns, events }) {
                           );
                         })}
                       </tr>
+                      // /************************************************************************************ */
                     );
                   })}
                 </tbody>

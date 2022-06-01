@@ -15,16 +15,23 @@ const countriesAccessor = (d) => d.nation;
 
 const url = "http://127.0.0.1:3000/events/years";
 
-// Placeholder
-const urlMen =
-  "http://127.0.0.1:3000/events/years/2021/xxxii-olympic-games/men_results";
-const urlWomen =
-  "http://127.0.0.1:3000/events/years/2021/xxxii-olympic-games/women_results";
+// // Placeholder
+// const urlMen =
+//   "http://127.0.0.1:3000/events/years/2021/xxxii-olympic-games/men_results";
+// const urlWomen =
+//   "http://127.0.0.1:3000/events/years/2021/xxxii-olympic-games/women_results";
 
-const ResultDashboard = () => {
+const ResultDashboard = ({ state }) => {
+  console.log(state.event, state.year);
+
   const [menData, setMenData] = useState([]);
   const [womenData, setWomenData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const event_url = url + "/" + state.year + "/" + state.event;
+  const urlMen = event_url + "/men_results";
+  const urlWomen = event_url + "/women_results";
+  console.log(urlMen, urlWomen);
 
   useEffect(() => {
     d3.json(urlMen).then((data) => {
