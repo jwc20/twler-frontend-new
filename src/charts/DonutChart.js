@@ -82,6 +82,13 @@ const colors = [
   "#c4c4cd",
 ];
 
+
+
+
+
+
+
+
 class DonutChart extends Component {
   constructor(props) {
     super(props);

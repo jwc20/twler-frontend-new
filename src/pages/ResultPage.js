@@ -11,6 +11,7 @@ function ResultPage() {
           <ResultDashboard />
         </div>
       </main>
+      
     </div>
   );
 }

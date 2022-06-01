@@ -4,12 +4,16 @@ import Scatterplot from "../charts/Scatterplot";
 import Histogram from "../charts/Histogram";
 import { range } from "d3";
 import DonutChart from "../charts/DonutChart";
+import { Suspense, useMemo } from "react";
+import ResultTable, { SelectColumnFilter } from "../components/ResultTable";
 
 const totalAccessor = (d) => d.total;
 const snatchAccessor = (d) => d.snatch;
 const jerkAccessor = (d) => d.jerk;
 const categoryAccessor = (d) => d.category;
 const countriesAccessor = (d) => d.nation;
+
+const url = "http://127.0.0.1:3000/events/years";
 
 // Placeholder
 const urlMen =
@@ -59,7 +63,6 @@ const ResultDashboard = () => {
   }
   // console.log(menNations);
 
-
   var res = womenData.reduce(function (x, cur) {
     let item = cur.nation;
     if (!x[item]) x[item] = 0;
@@ -71,19 +74,70 @@ const ResultDashboard = () => {
   for (const key in res) {
     const count = res[key];
     const data = key;
+    if (count === NaN || count === "") {
+      count = 0;
+    }
     womenNations.push({
       name: data,
       value: count,
     });
   }
-  console.log(womenNations)
+  // console.log(menNations);
 
+  const menNationAccessor = (d) => d.menNations.value;
+  // const womenNationAccessor = (d) => d.womenNations.name;
+  // console.log(womenData[womenNationAccessor[0]])
+
+  async function handleChange(e) {
+    const response = await fetch(url + `/events/years/${e.target.value}`)
+      .then((r) => r.json())
+      .then((menData) => {
+        setMenData(menData.filter((value) => Object.keys(value).length !== 0));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Name",
+        accessor: "name",
+      },
+      {
+        Header: "Birthdate",
+        accessor: "birthdate",
+      },
+      {
+        Header: "Category",
+        accessor: "category",
+      },
+      {
+        Header: "Snatch",
+        accessor: "snatch",
+      },
+      {
+        Header: "Clean and Jerk",
+        accessor: "jerk",
+      },
+      {
+        Header: "total",
+        accessor: "total",
+      },
+      {
+        Header: "Rank",
+        accessor: "rank",
+      },
+    ],
+    []
+  );
 
   return (
     <div>
-      <div className="mt-2 flex justify-content">
-        <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+      <div className="col-12 mt-2 flex">
+        <div className="col-12 -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+          <div className="py-2 min-w-full sm:px-6 lg:px-8">
             <div className="shadow border-b border-gray-200 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -161,68 +215,67 @@ const ResultDashboard = () => {
               </table>
             </div>
 
-            <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
-              {loading && <div>Loading...</div>}
-              {!loading && (
-                <div className="App__charts">
-                  <div className="h-56 grid grid-cols-2 gap-4 text-center	">
+            <div className="inline-block flex col-12 bg-gray-100 text-gray-900  grid  gap-4">
+              <main className="col-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                <Suspense fallback={<div>Loading...</div>}>
+                  {!menData.length ? (
+                    <div>Loading..</div>
+                  ) : (
                     <div>
-                      <h3>Participanting Nation Men</h3>
-                      <DonutChart
-                        data={menNations}
-                        xAccessor={categoryAccessor}
-                        label="Category"
-                      />
-                    </div>
-                    <div>
-                      <h3>Participanting Nation Women</h3>
-                      <DonutChart
-                        data={womenNations}
-                        xAccessor={categoryAccessor}
-                        label="Category"
-                      />
-                    </div>
+                      <div className="inline-block col-12 mt-4">
+                        <ResultTable columns={columns} menData={menData} />
 
-                    <div>
-                      <h3>Men Snatch vs Total</h3>
-                      <Scatterplot
-                        data={menData}
-                        xAccessor={snatchAccessor}
-                        yAccessor={totalAccessor}
-                        xLabel="Snatch"
-                        yLabel="Total"
-                      />
-                      <h3>Men CJ vs Total</h3>
-                      <Scatterplot
-                        data={menData}
-                        xAccessor={jerkAccessor}
-                        yAccessor={totalAccessor}
-                        xLabel="Clean and Jerk"
-                        yLabel="Total"
-                      />
-                    </div>
+                        <div className="flex inline-block py-6 md:justify-start md:space-x-10 grid  gap-4">
+                          {loading && <div>Loading...</div>}
+                          {!loading && (
+                            <div className="App__charts">
+                              <div className="h-56 grid grid-cols-2 gap-4 text-center	">
+                                <div className="col-12">
+                                  <h3>Men Snatch vs Total</h3>
+                                  <Scatterplot
+                                    data={menData}
+                                    xAccessor={snatchAccessor}
+                                    yAccessor={totalAccessor}
+                                    xLabel="Snatch"
+                                    yLabel="Total"
+                                  />
+                                  <h3>Men CJ vs Total</h3>
+                                  <Scatterplot
+                                    data={menData}
+                                    xAccessor={jerkAccessor}
+                                    yAccessor={totalAccessor}
+                                    xLabel="Clean and Jerk"
+                                    yLabel="Total"
+                                  />
+                                </div>
 
-                    <div>
-                      <h3>Women Snatch vs Total</h3>
-                      <Scatterplot
-                        data={womenData}
-                        xAccessor={snatchAccessor}
-                        yAccessor={totalAccessor}
-                        xLabel="Snatch"
-                        yLabel="Total"
-                      />
-                      <h3>Women CJ vs Total</h3>
-                      <Scatterplot
-                        data={womenData}
-                        xAccessor={jerkAccessor}
-                        yAccessor={totalAccessor}
-                        xLabel="Clean and Jerk"
-                        yLabel="Total"
-                      />
+                                <div className="col-12">
+                                  <h3>Women Snatch vs Total</h3>
+                                  <Scatterplot
+                                    data={womenData}
+                                    xAccessor={snatchAccessor}
+                                    yAccessor={totalAccessor}
+                                    xLabel="Snatch"
+                                    yLabel="Total"
+                                  />
+                                  <h3>Women CJ vs Total</h3>
+                                  <Scatterplot
+                                    data={womenData}
+                                    xAccessor={jerkAccessor}
+                                    yAccessor={totalAccessor}
+                                    xLabel="Clean and Jerk"
+                                    yLabel="Total"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
+                  )}
+                </Suspense>
+              </main>
             </div>
           </div>
         </div>
