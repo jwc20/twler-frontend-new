@@ -22,16 +22,19 @@ const url = "http://127.0.0.1:3000/events/years";
 //   "http://127.0.0.1:3000/events/years/2021/xxxii-olympic-games/women_results";
 
 const ResultDashboard = ({ state }) => {
-  console.log(state.event, state.year);
+  // console.log(state.event, state.year, state.location);
+
+  // const event_name = state.event.replace(/\s/g, "-").toLowerCase(); // backend handles this 
+  const year = state.date.split(", ")[1]
 
   const [menData, setMenData] = useState([]);
   const [womenData, setWomenData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const event_url = url + "/" + state.year + "/" + state.event;
+  const event_url = url + "/" + year + "/" + state.event;
   const urlMen = event_url + "/men_results";
   const urlWomen = event_url + "/women_results";
-  console.log(urlMen, urlWomen);
+  // console.log(urlMen, urlWomen);
 
   useEffect(() => {
     d3.json(urlMen).then((data) => {
@@ -142,7 +145,7 @@ const ResultDashboard = ({ state }) => {
 
   return (
     <div>
-      <div className="col-12 mt-2 flex">
+      <div className="min-h-screen col-12 mt-2 flex">
         <div className="col-12 -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
           <div className="py-2 min-w-full sm:px-6 lg:px-8">
             <div className="shadow border-b border-gray-200 sm:rounded-lg">
@@ -155,10 +158,11 @@ const ResultDashboard = ({ state }) => {
                     <td className="text-left table-auto">
                       <ul className="mx-2">
                         <li>
-                          <b>Location: </b> PLACEHOLDER
+                          <b>Location: </b>
+                          {state.location}
                         </li>
                         <li>
-                          <b>Date: </b>PLACEHOLDER
+                          <b>Date: </b>{state.date}
                         </li>
                       </ul>
                     </td>
@@ -222,7 +226,7 @@ const ResultDashboard = ({ state }) => {
               </table>
             </div>
 
-            <div className="inline-block flex col-12 bg-gray-100 text-gray-900  grid  gap-4">
+            <div className="inline-block flex col-12 text-gray-900  grid  gap-4">
               <main className="col-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <Suspense fallback={<div>Loading...</div>}>
                   {!menData.length ? (

@@ -12,7 +12,7 @@ import ResultPage from "../pages/ResultPage";
 function App() {
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Nav />
       <Routes>
           <Route index element={<Home />} />
