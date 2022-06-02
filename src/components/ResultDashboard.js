@@ -28,6 +28,8 @@ const ResultDashboard = ({ state }) => {
   // const event_name = state.event.replace(/\s/g, "-").toLowerCase(); // backend handles this
   const year = state.date.split(", ")[1];
 
+  let numberOfMen = 0;
+  let numberOfWomen = 0;
   const [menData, setMenData] = useState([]);
   const [womenData, setWomenData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,44 +40,65 @@ const ResultDashboard = ({ state }) => {
   const urlWomen = event_url + "/women_results";
   // console.log(urlMen, urlWomen);
 
-
-
-
-
-
-
   /////////////////////////////////////////////////////////////
 
-
-
-
   useEffect(() => {
-      d3.json(urlMen).then((data) => {
-        setMenData(data);
-        setResult(data)
-      });
-      d3.json(urlWomen).then((data) => {
-        setWomenData(data);
-        setResult(data)
-      });
-    setLoading(false)
-    return () => undefined;
+    d3.json(urlMen).then((data) => {
+      setMenData(data);
+      setResult(data);
+      numberOfMen = menData.length;
+    });
+    d3.json(urlWomen).then((data) => {
+      setWomenData(data);
+      setResult(data);
+      numberOfWomen = womenData.length;
+    });
+    setLoading(false);
+    // return () => undefined;
   }, []);
+
+  console.log(menData.length, womenData.length);
+
+  // useEffect(() => {
+  //   Promise.all([
+  //     d3.json(urlMen),
+  //     d3.json(urlWomen)
+
+  //   ]).then(([d1, d2]) => {
+  //     console.log(d1)
+  //     console.log(d2)
+  //     setMenData(d1)
+  //     setWomenData(d2)
+  //   })
+  // }, [])
 
   // console.log(data)
 
-  var results = result.filter((result, index, self) =>
-    index === self.findIndex((t) => (t.name === result.name && t.birthdate === result.birthdate)))
+  let results = result.filter(
+    (result, index, self) =>
+      index ===
+      self.findIndex(
+        (t) => t.name === result.name && t.birthdate === result.birthdate
+      )
+  );
 
- 
+  let cleanMenData = menData.filter(
+    (menData, index, self) =>
+      index ===
+      self.findIndex(
+        (t) => t.name === menData.name && t.birthdate === menData.birthdate
+      )
+  );
 
-/////////////////////////////////////////////////////////////
+  let cleanWomenData = womenData.filter(
+    (womenData, index, self) =>
+      index ===
+      self.findIndex(
+        (t) => t.name === womenData.name && t.birthdate === womenData.birthdate
+      )
+  );
 
-
-
-
-
-
+  /////////////////////////////////////////////////////////////
 
   // result = result.push(Object.assign({}, menData, womenData));
 
@@ -86,8 +109,6 @@ const ResultDashboard = ({ state }) => {
     return o1;
   }
   // console.log(result);
-
-  // console.log(menData);
 
   const countNation = Object.keys(menData).reduce(function (r, k) {
     var country = menData[k].nation;
@@ -230,14 +251,21 @@ const ResultDashboard = ({ state }) => {
                           <b>Total: </b> PLACEHOLDER
                         </li>
                         <li>
-                          <b>Men: </b>PLACEHOLDER
+                          <b>Men: </b>
+                          {/* {Object.keys(cleanMenData).length} */}
+                          {/* {menData.length} */}
+                          {numberOfMen}
                         </li>
                         <li>
-                          <b>Women: </b>PLACEHOLDER
+                          <b>Women: </b>
+                          {/* {Object.keys(cleanWomenData).length} */}
+                          {/* {womenData.length} */}
+                          {numberOfWomen}
                         </li>
                         <li>
                           <b>Countries: </b>
                           {Object.keys(countNation).length}
+                          {/* {numberOfWomen} */}
                         </li>
                       </ul>
                     </td>
@@ -282,15 +310,18 @@ const ResultDashboard = ({ state }) => {
             <div className="inline-block flex col-12 text-gray-900  grid  gap-4">
               <main className="col-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 <Suspense fallback={<div>Loading...</div>}>
-                  {!menData.length ? (
+                  {!results.length ? (
                     <div>Loading..</div>
                   ) : (
                     <div>
+                      <h2 className="text-3xl font-semibold py-5">
+                        Results Table
+                      </h2>
                       <div className="inline-block col-12 mt-4">
                         <ResultTable
                           columns={columns}
                           results={results}
-                          menData={menData}
+                          // menData={menData}
                         />
 
                         <div className="flex inline-block py-6 md:justify-start md:space-x-10 grid  gap-4">
@@ -301,7 +332,7 @@ const ResultDashboard = ({ state }) => {
                                 <div className="col-12">
                                   <h3>Men Snatch vs Total</h3>
                                   <Scatterplot
-                                    data={menData}
+                                    data={cleanMenData}
                                     xAccessor={snatchAccessor}
                                     yAccessor={totalAccessor}
                                     xLabel="Snatch"
@@ -309,7 +340,7 @@ const ResultDashboard = ({ state }) => {
                                   />
                                   <h3>Men CJ vs Total</h3>
                                   <Scatterplot
-                                    data={menData}
+                                    data={cleanMenData}
                                     xAccessor={jerkAccessor}
                                     yAccessor={totalAccessor}
                                     xLabel="Clean and Jerk"
@@ -320,7 +351,7 @@ const ResultDashboard = ({ state }) => {
                                 <div className="col-12">
                                   <h3>Women Snatch vs Total</h3>
                                   <Scatterplot
-                                    data={womenData}
+                                    data={cleanWomenData}
                                     xAccessor={snatchAccessor}
                                     yAccessor={totalAccessor}
                                     xLabel="Snatch"
@@ -328,7 +359,7 @@ const ResultDashboard = ({ state }) => {
                                   />
                                   <h3>Women CJ vs Total</h3>
                                   <Scatterplot
-                                    data={womenData}
+                                    data={cleanWomenData}
                                     xAccessor={jerkAccessor}
                                     yAccessor={totalAccessor}
                                     xLabel="Clean and Jerk"

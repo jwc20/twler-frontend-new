@@ -79,7 +79,7 @@ function GlobalFilter({
   );
 }
 
-function ResultTable({ columns, results, menData }) {
+function ResultTable({ columns, results }) {
 
 
 // console.log(clean);
