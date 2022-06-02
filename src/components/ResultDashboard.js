@@ -57,7 +57,7 @@ const ResultDashboard = ({ state }) => {
     // return () => undefined;
   }, []);
 
-  console.log(menData.length, womenData.length);
+  // console.log(menData.length, womenData.length);
 
   // useEffect(() => {
   //   Promise.all([
@@ -366,6 +366,20 @@ const ResultDashboard = ({ state }) => {
                                     yLabel="Total"
                                   />
                                 </div>
+                                  <div>
+                                    <DonutChart
+                                      data={menNations}
+                                      xAccessor={categoryAccessor}
+                                      label="Category"
+                                    />
+                                  </div>
+                                  <div>
+                                    <DonutChart
+                                      data={womenNations}
+                                      xAccessor={categoryAccessor}
+                                      label="Category"
+                                    />
+                                  </div>
                               </div>
                             </div>
                           )}
