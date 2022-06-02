@@ -42,9 +42,15 @@ function LoginForm({ setCurrentUser }) {
     setUsername("");
     setPassword("");
     console.log("logged in");
-    // setRedirect(true);
+    setRedirect(true);
     // <Navigate to="/events" replace={true} />
   };
+
+  if (redirect) {
+    return <Navigate to="/events" />;
+  }
+
+
 
   return (
     <div>
