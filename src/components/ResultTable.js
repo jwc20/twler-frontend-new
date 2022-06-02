@@ -14,9 +14,6 @@ import {
   ChevronDoubleRightIcon,
 } from "@heroicons/react/solid";
 import { Button, PageButton } from "./PaginationButton";
-import { Route } from "react-router-dom";
-import ResultPage from "../pages/ResultPage";
-import { useNavigate } from "react-router-dom";
 
 const url = "http://127.0.0.1:3000";
 
@@ -76,16 +73,18 @@ function GlobalFilter({
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        placeholder={`${count} events...`}
+        placeholder={`${count} results...`}
       />
     </label>
   );
 }
 
-// /************************************************************************************ */
+function ResultTable({ columns, results }) {
 
-function EventTable({ columns, events }) {
-  const navigate = useNavigate();
+
+// console.log(clean);
+
+
 
   const {
     getTableProps,
@@ -108,7 +107,8 @@ function EventTable({ columns, events }) {
   } = useTable(
     {
       columns,
-      data: events,
+      // data: menData,
+      data: results,
     },
     useGlobalFilter,
     useFilters,
@@ -116,55 +116,9 @@ function EventTable({ columns, events }) {
     usePagination
   );
 
-  // {
-  //   return (
-
-  //     // console.log(row)
-  //     console.log(row.cell.row.values.name, row.cell.row.values.date.split(', ')[1])
-
-  //     // <div>
-  //     //   {row}
-  //     // </div>
-  //   );
-  // },
-
-  // const onRowClick = (e) => {
-  //   // console.log(e.target.innerText);
-  //   const event_name = e.target.innerText.replace(/\s/g, "-").toLowerCase();
-  //   console.log(event_name);
-  //   // return (
-  //   //   <Route path="results" element={<ResultPage event={event_name} />} />
-  //   // )
-
-  //   navigate("results", {
-  //     state: {
-  //       event: event_name,
-  //     },
-  //   });
-  // };
-
-  // const handleClick = (row) => {
-  //   console.log(row);
-  //   const onClick = e => {
-  //     console.log(e.target)
-  //   }
-  // };
-
-  //   const onRowClick = (row) => {
-  //     console.log(row)
-  //     return {
-  //         onClick: e => {
-  //             console.log('A Td Element was clicked!')
-  //             console.log('it produced this event:', e)
-  //             console.log('It was in this row:', row)
-  //         }
-  //     }
-  // }
-
-  // /************************************************************************************ */
   return (
     <div>
-      <div className="flex gap-x-2">
+      <div className="">
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={state.globalFilter}
@@ -180,10 +134,10 @@ function EventTable({ columns, events }) {
         )}
       </div>
 
-      <div className="mt-2 flex flex-col">
-        <div className="-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+      <div className="mt-2 col-12">
+        <div className="col-12 -my-2  -mx-4 sm:-mx-6 lg:-mx-8">
+          <div className="col-12 py-2 inline-block min-w-full sm:px-6 lg:px-8">
+            <div className="col-12 hadow border-b border-gray-200 sm:rounded-lg">
               <table
                 {...getTableProps()}
                 border="1"
@@ -220,15 +174,9 @@ function EventTable({ columns, events }) {
                   {page.map((row, i) => {
                     prepareRow(row);
                     return (
-                      // /************************************************************************************ */
                       <tr
                         className="odd:bg-white even:bg-slate-100 hover:bg-slate-200 active:bg-slate-300 focus:outline-none focus:ring"
                         {...row.getRowProps()}
-                        // {...row.getRowProps({
-                        //   onClick: e => onRowClicked(row, e)})}
-                        // onClick={handleClick({ ...row })}
-                        // onClick={onRowClick}
-                        // onClick={onRowClick}
                       >
                         {row.cells.map((cell) => {
                           return (
@@ -241,7 +189,6 @@ function EventTable({ columns, events }) {
                           );
                         })}
                       </tr>
-                      // /************************************************************************************ */
                     );
                   })}
                 </tbody>
@@ -250,8 +197,10 @@ function EventTable({ columns, events }) {
           </div>
         </div>
       </div>
-      <div className="py-3 flex items-center justify-between">
-        <div className="flex-1 flex justify-between sm:hidden">
+
+
+      <div className="col-12 py-3 ">
+        <div className="col-12 sm:hidden">
           <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
             Previous
           </Button>
@@ -259,8 +208,8 @@ function EventTable({ columns, events }) {
             Next
           </Button>
         </div>
-        <div className="hidden sm:flex-1  sm:flex sm:items-center sm:justify-between">
-          <div className="flex gap-x-2 sm:items-center">
+        <div className="col-12 hidden sm:flex-1  sm:flex sm:items-center sm:justify-between">
+          <div className="col-12 flex gap-x-2 sm:items-center">
             <span className="text-sm text-gray-700">
               Page <span className="font-medium">{state.pageIndex + 1}</span> of{" "}
               <span className="font-medium">{pageOptions.length}</span>
@@ -326,4 +275,4 @@ function EventTable({ columns, events }) {
   );
 }
 
-export default EventTable;
+export default ResultTable;

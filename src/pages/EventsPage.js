@@ -1,10 +1,14 @@
 import { Suspense, useMemo } from "react";
 import EventTable, { SelectColumnFilter } from "../components/EventTable";
 import { useState, useEffect } from "react";
+import { Route } from "react-router-dom";
+import ResultPage from "../pages/ResultPage";
+import { useNavigate } from "react-router-dom";
 
 const url = "http://127.0.0.1:3000";
 
 function EventsPage() {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   // Temporary solution
   const placeholderYears = [
@@ -60,8 +64,47 @@ function EventsPage() {
     getInitialYear();
   }, []);
 
+  const ActionComponent = ({ row }) => {
+    // const id = 0;
+    const id_num = row.cell.row.original.event_url.split("=")[1];
+
+    const handleButtonClick = (row) => {
+      // console.log(row.cell.row.original)
+      const event_name = row.cell.row.original.name;
+      const event_location = row.cell.row.original.location;
+      // id = id_num
+      // console.log(id_num)
+      // .replace(/\s/g, "-")
+      // .toLowerCase();
+      const event_date = row.cell.row.original.date;
+      // console.log(event_name, event_year);
+      navigate("results", {
+        state: {
+          event: event_name,
+          date: event_date,
+          location: event_location,
+        },
+      });
+    };
+
+    return (
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => handleButtonClick(row)}
+      >
+        {id_num}
+      </button>
+    );
+  };
+
   const columns = useMemo(
     () => [
+      {
+        Header: "",
+        accessor: "button",
+        Cell: (row) => <ActionComponent row={row}>Action</ActionComponent>,
+      },
+
       {
         Header: "Name",
         accessor: "name",
@@ -92,7 +135,7 @@ function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
+    <div className="min-h-screen text-gray-900">
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="">
           <h1 className="text-xl font-semibold">Events</h1>

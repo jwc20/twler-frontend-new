@@ -1,9 +1,55 @@
-function Login() {
+import React, { useState } from "react";
+
+export default function Login({ setCurrentUser }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleLogin(event) {
+    event.preventDefault();
+    event.target.reset();
+
+    const user = { username, password };
+
+    fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user }),
+    })
+      .then((r) => r.json())
+      .then((response) => {
+        // localStorage.token = response.jwt;
+        localStorage.setItem("token", response.jwt);
+        setCurrentUser(response.user);
+      });
+  }
+
   return (
     <div>
-      <h1 className="text-3xl font-bold underline italic">Login</h1>
+      <h1>Log In</h1>
+      <form onSubmit={handleLogin}>
+        <br />
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <br />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br />
+        <br />
+        <button type="submit">Submit</button>
+      </form>
+      <br />
+      <br />
     </div>
   );
 }
-
-export default Login;

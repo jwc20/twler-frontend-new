@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Popover } from "@headlessui/react";
+import { useState, useEffect } from "react";
 
-function Nav() {
+function Nav({ user, loggedIn, logOut }) {
   return (
     <Popover className="relative bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -14,7 +15,7 @@ function Nav() {
               Home
             </Link>
 
-            <Link
+            {/* <Link
               to="/results"
               className="text-base font-medium text-gray-500 hover:text-gray-900"
             >
@@ -26,7 +27,7 @@ function Nav() {
               className="text-base font-medium text-gray-500 hover:text-gray-900"
             >
               Athletes
-            </Link>
+            </Link> */}
 
             <Link
               to="/events"
@@ -35,33 +36,50 @@ function Nav() {
               Events
             </Link>
 
-            {/* Need cutom link/route */}
             <Link
+              to="/calculator"
+              className="text-base font-medium text-gray-500 hover:text-gray-900"
+            >
+              Calculator
+            </Link>
+
+            {/* Need cutom link/route */}
+            {/* <Link
               to="/result_page"
               className="text-base font-medium text-gray-500 hover:text-gray-900"
             >
               Result Page
-            </Link>
-
-
-
-
+            </Link> */}
           </Popover.Group>
 
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <Link
-              to="login"
-              className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Sign in
-            </Link>
+            {loggedIn ? (
+              <span>
+                <br />
+                <button
+                  className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                  onClick={logOut}
+                >
+                  Log Out
+                </button>
+              </span>
+            ) : (
+              <>
+                <Link
+                  to="login"
+                  className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Sign in
+                </Link>
 
-            <Link
-              to="signup"
-              className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Sign up
-            </Link>
+                <Link
+                  to="signup"
+                  className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
