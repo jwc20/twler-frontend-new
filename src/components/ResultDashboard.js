@@ -6,6 +6,7 @@ import { range } from "d3";
 import DonutChart from "../charts/DonutChart";
 import { Suspense, useMemo } from "react";
 import ResultTable, { SelectColumnFilter } from "../components/ResultTable";
+import { count } from "d3";
 
 const totalAccessor = (d) => d.total;
 const snatchAccessor = (d) => d.snatch;
@@ -24,38 +25,79 @@ const url = "http://127.0.0.1:3000/events/years";
 const ResultDashboard = ({ state }) => {
   // console.log(state.event, state.year, state.location);
 
-  // const event_name = state.event.replace(/\s/g, "-").toLowerCase(); // backend handles this 
-  const year = state.date.split(", ")[1]
+  // const event_name = state.event.replace(/\s/g, "-").toLowerCase(); // backend handles this
+  const year = state.date.split(", ")[1];
 
   const [menData, setMenData] = useState([]);
   const [womenData, setWomenData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [result, setResult] = useState([]);
 
   const event_url = url + "/" + year + "/" + state.event;
   const urlMen = event_url + "/men_results";
   const urlWomen = event_url + "/women_results";
   // console.log(urlMen, urlWomen);
 
+
+
+
+
+
+
+  /////////////////////////////////////////////////////////////
+
+
+
+
   useEffect(() => {
-    d3.json(urlMen).then((data) => {
-      setMenData(data);
-      setLoading(false);
-    });
-    d3.json(urlWomen).then((data) => {
-      setWomenData(data);
-      setLoading(false);
-    });
+      d3.json(urlMen).then((data) => {
+        setMenData(data);
+        setResult(data)
+      });
+      d3.json(urlWomen).then((data) => {
+        setWomenData(data);
+        setResult(data)
+      });
+    setLoading(false)
     return () => undefined;
   }, []);
 
-  // const countMen = Object.keys(menData).reduce(function (r, k) {
-  //   var country = menData[k].nation;
-  //   r[country] = (r[country] || 0) + 1;
-  //   return r;
-  // }, Object.create(null));
-  // console.log(countMen);
+  // console.log(data)
 
-  var res = menData.reduce(function (x, cur) {
+  var results = result.filter((result, index, self) =>
+    index === self.findIndex((t) => (t.name === result.name && t.birthdate === result.birthdate)))
+
+ 
+
+/////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+  // result = result.push(Object.assign({}, menData, womenData));
+
+  function jsonConcat(o1, o2) {
+    for (var key in o2) {
+      o1[key] = o2[key];
+    }
+    return o1;
+  }
+  // console.log(result);
+
+  // console.log(menData);
+
+  const countNation = Object.keys(menData).reduce(function (r, k) {
+    var country = menData[k].nation;
+    r[country] = (r[country] || 0) + 1;
+    return r;
+  }, Object.create(null));
+
+  // console.log(countNation, Object.keys(countNation).length);
+
+  var resMen = menData.reduce(function (x, cur) {
     let item = cur.nation;
     if (!x[item]) x[item] = 0;
     x[item] = x[item] + 1;
@@ -63,17 +105,16 @@ const ResultDashboard = ({ state }) => {
   }, {});
 
   var menNations = [];
-  for (const key in res) {
-    const count = res[key];
+  for (const key in resMen) {
+    const count = resMen[key];
     const data = key;
     menNations.push({
       name: data,
       value: count,
     });
   }
-  // console.log(menNations);
 
-  var res = womenData.reduce(function (x, cur) {
+  var resWomen = womenData.reduce(function (x, cur) {
     let item = cur.nation;
     if (!x[item]) x[item] = 0;
     x[item] = x[item] + 1;
@@ -81,8 +122,8 @@ const ResultDashboard = ({ state }) => {
   }, {});
 
   var womenNations = [];
-  for (const key in res) {
-    const count = res[key];
+  for (const key in resWomen) {
+    const count = resWomen[key];
     const data = key;
     if (count === NaN || count === "") {
       count = 0;
@@ -92,22 +133,24 @@ const ResultDashboard = ({ state }) => {
       value: count,
     });
   }
-  // console.log(menNations);
+  // console.log('MEN: ', menNations);
 
-  const menNationAccessor = (d) => d.menNations.value;
+  // console.log('Women: ', womenNations);
+
+  // const menNationAccessor = (d) => d.menNations.value;
   // const womenNationAccessor = (d) => d.womenNations.name;
   // console.log(womenData[womenNationAccessor[0]])
 
-  async function handleChange(e) {
-    const response = await fetch(url + `/events/years/${e.target.value}`)
-      .then((r) => r.json())
-      .then((menData) => {
-        setMenData(menData.filter((value) => Object.keys(value).length !== 0));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  // async function handleChange(e) {
+  //   const response = await fetch(url + `/events/years/${e.target.value}`)
+  //     .then((r) => r.json())
+  //     .then((menData) => {
+  //       setMenData(menData.filter((value) => Object.keys(value).length !== 0));
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
   const columns = useMemo(
     () => [
@@ -118,6 +161,14 @@ const ResultDashboard = ({ state }) => {
       {
         Header: "Birthdate",
         accessor: "birthdate",
+      },
+      {
+        Header: "Country",
+        accessor: "nation",
+      },
+      {
+        Header: "Group",
+        accessor: "group",
       },
       {
         Header: "Category",
@@ -162,7 +213,8 @@ const ResultDashboard = ({ state }) => {
                           {state.location}
                         </li>
                         <li>
-                          <b>Date: </b>{state.date}
+                          <b>Date: </b>
+                          {state.date}
                         </li>
                       </ul>
                     </td>
@@ -184,7 +236,8 @@ const ResultDashboard = ({ state }) => {
                           <b>Women: </b>PLACEHOLDER
                         </li>
                         <li>
-                          <b>Countries: </b>PLACEHOLDER
+                          <b>Countries: </b>
+                          {Object.keys(countNation).length}
                         </li>
                       </ul>
                     </td>
@@ -234,7 +287,11 @@ const ResultDashboard = ({ state }) => {
                   ) : (
                     <div>
                       <div className="inline-block col-12 mt-4">
-                        <ResultTable columns={columns} menData={menData} />
+                        <ResultTable
+                          columns={columns}
+                          results={results}
+                          menData={menData}
+                        />
 
                         <div className="flex inline-block py-6 md:justify-start md:space-x-10 grid  gap-4">
                           {loading && <div>Loading...</div>}

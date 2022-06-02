@@ -79,7 +79,13 @@ function GlobalFilter({
   );
 }
 
-function ResultTable({ columns, menData }) {
+function ResultTable({ columns, results, menData }) {
+
+
+// console.log(clean);
+
+
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -101,7 +107,8 @@ function ResultTable({ columns, menData }) {
   } = useTable(
     {
       columns,
-      data: menData,
+      // data: menData,
+      data: results,
     },
     useGlobalFilter,
     useFilters,
@@ -173,7 +180,6 @@ function ResultTable({ columns, menData }) {
                       >
                         {row.cells.map((cell) => {
                           return (
-                            // TODO ONCLICK
                             <td
                               className="px-6 py-4 whitespace-nowrap"
                               {...cell.getCellProps()}
