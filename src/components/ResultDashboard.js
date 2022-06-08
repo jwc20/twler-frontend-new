@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import Scatterplot from "../charts/Scatterplot";
 import Histogram from "../charts/Histogram";
@@ -42,20 +42,39 @@ const ResultDashboard = ({ state }) => {
 
   /////////////////////////////////////////////////////////////
 
+  // useEffect(() => {
+  //   d3.json(urlMen).then((data) => {
+  //     setMenData(data);
+  //     setResult(data);
+  //     numberOfMen = menData.length;
+  //   });
+  //   d3.json(urlWomen).then((data) => {
+  //     setWomenData(data);
+  //     setResult(data);
+  //     numberOfWomen = womenData.length;
+  //   });
+  //   setLoading(false);
+  //   // return () => undefined;
+  // }, []);
+
   useEffect(() => {
+    let canceled = false; 
+
     d3.json(urlMen).then((data) => {
+      if (canceled) return;
       setMenData(data);
       setResult(data);
       numberOfMen = menData.length;
-    });
-    d3.json(urlWomen).then((data) => {
-      setWomenData(data);
-      setResult(data);
-      numberOfWomen = womenData.length;
-    });
+
     setLoading(false);
-    // return () => undefined;
+    });
+
+    return () => { canceled = true };
   }, []);
+      console.log(menData)
+
+
+
 
   // console.log(menData.length, womenData.length);
 
@@ -253,14 +272,12 @@ const ResultDashboard = ({ state }) => {
                         <li>
                           <b>Men: </b>
                           {/* {Object.keys(cleanMenData).length} */}
-                          {/* {menData.length} */}
-                          {numberOfMen}
+                          {menData.length}
                         </li>
                         <li>
                           <b>Women: </b>
                           {/* {Object.keys(cleanWomenData).length} */}
-                          {/* {womenData.length} */}
-                          {numberOfWomen}
+                          {womenData.length}
                         </li>
                         <li>
                           <b>Countries: </b>
