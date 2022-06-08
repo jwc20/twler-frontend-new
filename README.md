@@ -24,6 +24,11 @@ Twler (Top Weightlifter) is an app that will **_directly_** render data that is 
 ![result 1](./public/result-1.png)
 ![result 2](./public/result-2.png)
 
+### Calculator
+
+![calulator 1](./public/calc1.png)
+![calulator 2](./public/calc2.png)
+
 ## As a user, I can:
 
 - signup and login
