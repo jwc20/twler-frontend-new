@@ -1,4 +1,6 @@
-# Twler Frontend Beta
+# Twler Frontend
+
+Live Demo: [Heroku App](https://twler-app.herokuapp.com/events)
 
 The frontend client for rendering IWF (Internationa Weightlifting Federation) results data.
 
