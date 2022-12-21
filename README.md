@@ -2,7 +2,7 @@
 
 Live Demo: [Heroku App](https://twler-app.herokuapp.com/events)
 
-The frontend client for rendering IWF (Internationa Weightlifting Federation) results data.
+The frontend client for rendering IWF (International Weightlifting Federation) results data.
 
 Twler (Top Weightlifter) is an app that will **_directly_** render data that is scraped with iwf_ruby
 (Not from a postgresql database!)
